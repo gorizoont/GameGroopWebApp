@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using GameGroopWebApp.Data.Enum;
 
 namespace GameGroopWebApp.Models
 {
@@ -13,6 +14,7 @@ namespace GameGroopWebApp.Models
         [ForeignKey("Address")]
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
+        public ClubCategory ClubCategory { get; set; }
         [ForeignKey("AppUser")]
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
