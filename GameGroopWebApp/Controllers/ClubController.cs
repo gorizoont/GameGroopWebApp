@@ -1,12 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameGroopWebApp.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameGroopWebApp.Controllers
 {
     public class ClubController : Controller
     {
-        public IActionResult Index()
+        private readonly AppDBContext _context;
+
+        public ClubController(AppDBContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        
+
+        public IActionResult Index() //C
+        {
+            var clubs = _context.Clubs.ToList(); //M
+            return View(clubs); //V
         }
     }
 }
