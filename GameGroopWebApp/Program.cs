@@ -1,10 +1,14 @@
 using GameGroopWebApp.Data;
+using GameGroopWebApp.Interfaces;
+using GameGroopWebApp.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 builder.Services.AddDbContext<AppDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

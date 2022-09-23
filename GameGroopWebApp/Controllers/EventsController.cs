@@ -1,26 +1,28 @@
 ﻿using GameGroopWebApp.Data;
+using GameGroopWebApp.Interfaces;
 using GameGroopWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace GameGroopWebApp.Controllers
 {
     public class EventsController : Controller
     {
-        private readonly AppDBContext _context;
+        private readonly IEventsRepository _eventsRepository;
 
-        public EventsController(AppDBContext context)
+        public EventsController(IEventsRepository eventsRepository)
         {
-            _context = context;
+            _eventsRepository = eventsRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Events> events = _context.Events.ToList();
+            IEnumerable<Events> events = await _eventsRepository.GetAll();
             return View(events);
         }
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Events events = _context.Events.Include(a => a.Address).FirstOrDefault(c => c.Id == id);
+            Events events = await _eventsRepository.GetByIdAsync(id);
             return View(events);
         }
     }
