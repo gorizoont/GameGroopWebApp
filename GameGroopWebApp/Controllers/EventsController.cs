@@ -1,9 +1,7 @@
-﻿using GameGroopWebApp.Data;
-using GameGroopWebApp.Interfaces;
+﻿using GameGroopWebApp.Interfaces;
 using GameGroopWebApp.Models;
+using GameGroopWebApp.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace GameGroopWebApp.Controllers
 {
@@ -24,6 +22,20 @@ namespace GameGroopWebApp.Controllers
         {
             Events events = await _eventsRepository.GetByIdAsync(id);
             return View(events);
+        }
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(Events events)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(events);
+            }
+            _eventsRepository.Add(events);
+            return RedirectToAction("Index");
         }
     }
 }
