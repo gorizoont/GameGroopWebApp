@@ -1,6 +1,8 @@
 using GameGroopWebApp.Data;
+using GameGroopWebApp.Helpers;
 using GameGroopWebApp.Interfaces;
 using GameGroopWebApp.Repository;
+using GameGroopWebApp.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IClubRepository, ClubRepository>();
 builder.Services.AddScoped<IEventsRepository, EventsRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddDbContext<AppDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
