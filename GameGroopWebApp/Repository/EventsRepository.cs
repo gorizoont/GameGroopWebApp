@@ -37,7 +37,12 @@ namespace GameGroopWebApp.Repository
 
         public async Task<Events> GetByIdAsync(int id)
         {
-            return await _context.Events.Include(i => i.Address).FirstOrDefaultAsync();
+            return await _context.Events.Include(i => i.Address).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<Events> GetByIdAsyncNoTracking(int id)
+        {
+            return await _context.Events.Include(i => i.Address).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public bool Save()

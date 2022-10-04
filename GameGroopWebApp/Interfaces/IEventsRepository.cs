@@ -6,6 +6,7 @@ namespace GameGroopWebApp.Interfaces
     {
         Task<IEnumerable<Events>> GetAll();
         Task<Events> GetByIdAsync(int id);
+        Task<Events> GetByIdAsyncNoTracking(int id);
         Task<IEnumerable<Events>> GetAllEventsByCity(string city);
         bool Add(Events events);
         bool Delete(Events events);

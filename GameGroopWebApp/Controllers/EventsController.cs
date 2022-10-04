@@ -1,9 +1,11 @@
-﻿using GameGroopWebApp.Interfaces;
+﻿using CloudinaryDotNet.Actions;
+using GameGroopWebApp.Interfaces;
 using GameGroopWebApp.Models;
 using GameGroopWebApp.Repository;
 using GameGroopWebApp.Services;
 using GameGroopWebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GameGroopWebApp.Controllers
 {
@@ -60,6 +62,63 @@ namespace GameGroopWebApp.Controllers
             }
 
             return View(eventsVM);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var events = await _eventsRepository.GetByIdAsync(id);
+            if (events == null) return View("Error");
+            var eventsVM = new EditEventsViewModel
+            {
+                Title = events.Title,
+                Description = events.Description,
+                AddressId = events.AddressId,
+                Address = events.Address,
+                URL = events.Image,
+                EventsCategory = events.EventsCategory
+            };
+            return View(eventsVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditEventsViewModel eventsVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit Events");
+                return View("Edit", eventsVM);
+            }
+
+            var userClub = await _eventsRepository.GetByIdAsyncNoTracking(id);
+
+            if (userClub == null)
+            {
+                return View("Error");
+            }
+
+            var photoResult = await _photoService.AddPhotoAsync(eventsVM.Image);
+
+            if (photoResult.Error != null)
+            {
+                ModelState.AddModelError("Image", "Photo upload failed");
+                return View(eventsVM);
+            }
+
+            var events = new Events
+            {
+                Id = id,
+                Title = eventsVM.Title,
+                Description = eventsVM.Description,
+                Image = photoResult.Url.ToString(),
+                AddressId = eventsVM.AddressId,
+                Address = eventsVM.Address,
+                EventsCategory = eventsVM.EventsCategory
+            };
+
+            _eventsRepository.Update(events);
+
+            return RedirectToAction("Index");
         }
     }
 }
