@@ -12,11 +12,13 @@ namespace GameGroopWebApp.Controllers
     {
         private readonly IClubRepository _clubRepository;
         private readonly IPhotoService _photoService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClubController(IClubRepository clubRepository, IPhotoService photoService)
+        public ClubController(IClubRepository clubRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _clubRepository = clubRepository;
             _photoService = photoService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         
@@ -34,7 +36,9 @@ namespace GameGroopWebApp.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var createClubViewModel = new CreateClubViewModel {AppUserId = curUserId};
+            return View(createClubViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateClubViewModel clubVM)
@@ -49,6 +53,7 @@ namespace GameGroopWebApp.Controllers
                     Description = clubVM.Description,
                     Image = uploadResult.Url.ToString(),
                     ClubCategory = clubVM.ClubCategory,
+                    AppUserId = clubVM.AppUserId,
                     Address = new Address
                     {
                         Street = clubVM.Address.Street,

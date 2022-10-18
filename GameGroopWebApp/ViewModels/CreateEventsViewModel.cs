@@ -12,5 +12,6 @@ namespace GameGroopWebApp.ViewModels
         public Address Address { get; set; }
         public EventsCategory EventsCategory { get; set; }
         public IFormFile Image { get; set; }
+        public string AppUserId { get; set; }
     }
 }

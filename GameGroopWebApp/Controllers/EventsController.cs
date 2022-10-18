@@ -13,11 +13,13 @@ namespace GameGroopWebApp.Controllers
     {
         private readonly IEventsRepository _eventsRepository;
         private readonly IPhotoService _photoService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public EventsController(IEventsRepository eventsRepository, IPhotoService photoService)
+        public EventsController(IEventsRepository eventsRepository, IPhotoService photoService, IHttpContextAccessor httpContextAccessor)
         {
             _eventsRepository = eventsRepository;
             _photoService = photoService;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -31,7 +33,9 @@ namespace GameGroopWebApp.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            var curUserId = _httpContextAccessor.HttpContext?.User.GetUserId();
+            var createEventsViewModel = new CreateEventsViewModel { AppUserId = curUserId };
+            return View(createEventsViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateEventsViewModel eventsVM)
@@ -46,6 +50,7 @@ namespace GameGroopWebApp.Controllers
                     Description = eventsVM.Description,
                     Image = uploadResult.Url.ToString(),
                     EventsCategory = eventsVM.EventsCategory,
+                    AppUserId = eventsVM.AppUserId,
                     Address = new Address
                     {
                         Street = eventsVM.Address.Street,
