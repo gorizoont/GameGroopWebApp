@@ -6,5 +6,7 @@
         public string UserName { get; set; }
         public int? Rank { get; set; }
         public int? Level { get; set; }
+        public string ProfileImageUrl { get; set; }
+
     }
 }

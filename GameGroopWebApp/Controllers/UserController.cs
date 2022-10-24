@@ -25,6 +25,7 @@ namespace GameGroopWebApp.Controllers
                     UserName = user.UserName,
                     Rank = user.Rank,
                     Level = user.Level,
+                    ProfileImageUrl = user.ProfileImageUrl
                     
                 };
                 result.Add(userViewModel);
